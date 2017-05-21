@@ -12,11 +12,12 @@
 	-Replay function
 	-Infinity-loop prevention for non-numerical user inputs
 	-Add more rooms
-	-Add fancier menus and titles
+	-Add fancier titles
 	-Add more comments
 	
 	Bonus
 	-Highscore tracking
+	-Menu with help and settings
 */
 
 //Start of actual code
@@ -44,33 +45,33 @@ void debug(char*, int);
 
 //Main function
 int main(void){
-	int debugConstant = 0;				//Preventation of error during debug
-	debug("init()...", debugConstant); 	//Debug code. logs that initalization of main has begun
+	int debugConstant = 0;						//Preventation of error during debug
+	debug("init()...", debugConstant); 			//Debug code. logs that initalization of main has begun
 	
 	//Initialization of variables
-	int userInput; 				//Variable for tracking the user's input
-	int steps = -1; 			//Variable for tracking steps. Starts at -1 to compensate for start of the game
+	int userInput; 								//Variable for tracking the user's input
+	int steps = -1; 							//Variable for tracking steps. Starts at -1 to compensate for start of the game
 	Location* goalRoom;
 	
 
 	Location startRoom, office, cafeteria, lobby, restroom; //Struct names
 	
 	//startRoom - Special room with info
-	startRoom.name = "Outside";
-	startRoom.description = "You are outside the school building. It is of utmost importance that you find Jani.";
+	startRoom.name = "School entrance";
+	startRoom.description = "You are outside the school entrance and you urgently need to find Jani, your economics teacher,\nbefore he magically disappears\nTime is of the essence!\n\nMake your choices by entering a number between 1 and 5.\nThe numbers corresponds to different actions which are presented to you below the description in each room\n";
 	startRoom.destinations[0] = &lobby;
-	startRoom.options[0] = "Enter school";
+	startRoom.options[0] = "Press 1 to enter school and start the game";
 	startRoom.numOptions = 1;
 
 	//Lobby
 	lobby.name = "Lobby";
-	lobby.description = "You went to the lobby. What do you do now?";
+	lobby.description = "You entered the school and make your way to the lobby. Where to you begin your search?";
 	lobby.destinations[0] = &cafeteria;
 	lobby.destinations[1] =	&office;
 	lobby.destinations[2] = &restroom;
-	lobby.options[0] = "Go to the cafeteria";
-	lobby.options[1] = "Go to the office";
-	lobby.options[2] = "Go to the restroom";
+	lobby.options[0] = "The cafeteria";
+	lobby.options[1] = "The offices";
+	lobby.options[2] = "The restroom";
 	lobby.numOptions = 3;
 	
 	//Office
@@ -110,15 +111,15 @@ int main(void){
 	
 	
 	// Start of the game
-	Location* room = &startRoom;			//Sets the first struct to be printed to startRoom
-	Location* hideouts[2]; 					//Sets the maximum amout of locations Jani can be in.
-	hideouts[0] = &restroom;				//Location A
-	hideouts[1] = &cafeteria;				//Location B
+	Location* room = &startRoom;									//Sets the first struct to be printed to startRoom
+	Location* hideouts[2]; 											//Sets the maximum amout of locations Jani can be in.
+	hideouts[0] = &restroom;										//Location A
+	hideouts[1] = &cafeteria;										//Location B
 	
 	//Makes Jani hide in different rooms on each play-through
-	goalRoom = hideouts[hideJani(2)];		//Sets the goalRoom to one of the rooms Jani is hiding in
+	goalRoom = hideouts[hideJani(2)];								//Sets the goalRoom to one of the rooms Jani is hiding in
 	debug("roomInfo()...", debugConstant);
-	roomInfo(*room);						//Prints startRoom
+	roomInfo(*room);												//Prints startRoom
 	
 	//Loop for checking win condition
 	while(room != goalRoom){
