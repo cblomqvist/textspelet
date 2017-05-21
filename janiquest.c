@@ -2,6 +2,8 @@
 #include <string.h> 
 #include <windows.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <time.h>
 
 typedef struct Locations {
 	char* name;
@@ -11,17 +13,18 @@ typedef struct Locations {
 	int numOptions;
 } Location;
 
-
-Location locations[17];
-
 //Declaration of functions
 void roomInfo(Location info);
+int hideJani(int);
+void debug(char*, int);
 
+//Main
 int main(void){
-	int userInput;
+	int userInput; //Variable for tracking the user's input
 	Location* goalRoom;
+	int debugConstant = 0;
 	
-	printf("init()...");
+	debug("init()...", debugConstant);
 
 	Location startRoom, office, cafeteria, lobby, restroom;
 	
@@ -81,27 +84,48 @@ int main(void){
 	
 	// Start of the game
 	Location* room = &startRoom;
-	goalRoom = &restroom;
-	printf("roomInfo()...");
+	Location* hideouts[2];
+	hideouts[0] = &restroom;
+	hideouts[1] = &cafeteria;
+	
+	goalRoom = hideouts[hideJani(2)];
+	debug("roomInfo()...", debugConstant);
 	roomInfo(*room);
 	
 	while(room != goalRoom){
 		scanf("%d", &userInput);
-		userInput--;
-		printf("userInput: %d\n", userInput);
-		room = room->destinations[userInput];
-		roomInfo(*room);
+		if (userInput > 0 && userInput <= room->numOptions){
+			debug("userInput-1", userInput);
+			userInput--;
+			room = room->destinations[userInput];
+			roomInfo(*room);
+		}
+		else{
+			printf("Whoops! Please make your choice by entering one of the listed numbers\nTry again: ");
+		}
 	}
-	
+	system("cls");
+	printf("You found him at last. He was hiding in the %s\n", room->name);
 } 
 
 void roomInfo(Location info){
 	int i = 0;
-	// system("cls");
+	system("cls");
 	printf("Current Room: %s\n", info.name);
 	printf("%s\n", info.description);
 	for (i = 0; i < info.numOptions; i++){
 		printf("%d: %s\n", i+1, info.options[i]);
 	}
 	printf("Enter alternative: ");
+}
+
+int hideJani(int numberOfHideouts){
+	time_t t;
+	srand((unsigned) time(&t));
+	int random = rand() % numberOfHideouts;
+	return random;
+}
+
+void debug(char* msg, int value) {
+//	printf("DEBUG: %s: %d\n", msg, value);
 }
