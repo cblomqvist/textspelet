@@ -11,9 +11,8 @@
 	TODO
 	-Replay function
 	-Infinity-loop prevention for non-numerical user inputs
-	-Add more rooms
-	-Add fancier titles
-	-Add more comments
+	-Add more variants of titles/room descriptions
+	-Solve the bug which changes the name of the teachers' room to something random
 	
 	Bonus
 	-Highscore tracking
@@ -54,12 +53,12 @@ int main(void){
 	Location* goalRoom;
 	
 
-	Location startRoom, cafeteria, lobby, restroom, staircase, floor2, lunchroom, wCorridor, nCorridor, eCorridor, garden, classA, classB, classC, copyroom, lab, printer, itOffice, teachers; //Struct names
+	Location startRoom, cafeteria, lobby, restroom, staircase, floor2, lunchroom, wCorridor, nCorridor, eCorridor, garden, classA, classB, classC, copyroom, lab, printer, itOffice, teacher; //Struct names
 	
 	
 	//startRoom - Special room with info
 	startRoom.name = "School entrance";
-	startRoom.description = "You are outside the school entrance and you urgently need to find Jani, your economics teacher,\nbefore he magically disappears\nTime is of the essence!\n\nMake your choices by entering a number between 1 and 5.\nThe numbers corresponds to different actions which are presented to you below the description in each room\n";
+	startRoom.description = "You are outside the school entrance and you urgently need to find Jani, your economics teacher,\nbefore he magically disappears.\nTime is of the essence!\n\nMake your choices by entering a number between 1 and 5.\nThe numbers corresponds to different actions which are presented to you below the description in each room\n";
 	startRoom.destinations[0] = &staircase;
 	startRoom.options[0] = "Press 1 to enter the staircase at school and start the game";
 	startRoom.numOptions = 1;
@@ -113,7 +112,7 @@ int main(void){
 	floor2.destinations[2] = &staircase;
 	floor2.options[0] = "Check the cafeteria";
 	floor2.options[1] = "Check the lunchroom";
-	floor2.options[2] = "Go down the staicase";
+	floor2.options[2] = "Go down the staircase";
 	floor2.numOptions = 3;
 
 
@@ -132,7 +131,7 @@ int main(void){
 	//The garden
 	garden.name = "The garden";
 	garden.description = "You go out to the garden. He is not here. What do you do now?";
-	garden.destinations[0] = &teachers;
+	garden.destinations[0] = &teacher;
 	garden.destinations[1] = &staircase;
 	garden.destinations[2] = &wCorridor;
 	garden.options[0] = "Check the teachers' room";
@@ -170,25 +169,25 @@ int main(void){
 	//The west corridor
 	wCorridor.name = "The west corridor";
 	wCorridor.description = "You have entered the west corridor.";
-	wCorridor.destinations[0] = &teachers;
+	wCorridor.destinations[0] = &teacher;
 	wCorridor.destinations[1] = &classA;
 	wCorridor.destinations[2] = &copyroom;
 	wCorridor.destinations[3] = &lobby;
 	wCorridor.options[0] = "Enter the teachers' room";
-	wCorridor.options[1] = "Search the classroom known as placename1";
+	wCorridor.options[1] = "Search the classroom known as dubble-classroom";
 	wCorridor.options[2] = "Search the copyroom";
 	wCorridor.options[3] = "Go back to the lobby";
 	wCorridor.numOptions = 4;
 	
 	
-	//Teachers' room
-	teachers.name = "The teachers' room";
-	teachers.description = "You entered the teachers' room. There are pleanty of teachers there but Jani isn't one of them.";
-	teachers.destinations[0] = &garden;
-	teachers.destinations[1] = &wCorridor;
-	teachers.options[0] = "Go out to the garden";
-	teachers.options[1] = "Go into the west corridor";
-	teachers.numOptions = 2;
+	//teachers' room
+	teacher.name = "The teachers' room";
+	teacher.description = "You entered the teachers' room. There are pleanty of teachers there but Jani isn't one of them.";
+	teacher.destinations[0] = &garden;
+	teacher.destinations[1] = &wCorridor;
+	teacher.options[0] = "Go out to the garden";
+	teacher.options[1] = "Go into the west corridor";
+	teacher.numOptions = 2;
 	
 	
 	//Copyroom
@@ -245,26 +244,32 @@ int main(void){
 	classC.options[0] = "Try somewhere else";
 	classC.numOptions = 1;
 	
-	// .name = "";
-	// .description = "";
-	// .destinations[0] = &;
-	// .destinations[1] = &;
-	// .destinations[2] = &;
-	// .options[0] = "";
-	// .options[1] = "";
-	// .options[2] = "";
-	// .numOptions = 3;
+	
+	
+/*	format of locations
+	
+	.name = "";
+	.description = "";
+	.destinations[0] = &;
+	.destinations[1] = &;
+	.destinations[2] = &;
+	.options[0] = "";
+	.options[1] = "";
+	.options[2] = "";
+	.numOptions = 3; 
+
+*/
 	
 	// Start of the game
 	Location* room = &startRoom;									//Sets the first struct to be printed to startRoom
-	Location* hideouts[3]; 											//Sets the maximum amout of locations Jani can be in.
-	hideouts[0] = &restroom;										//Location A
-	hideouts[1] = &cafeteria;										//Location B
-	hideouts[2] = &classC;											//Location C
-	hideouts[3] = &printer;
+	Location* hideouts[3]; 											//Sets the maximum amount of locations Jani can be in.
+	hideouts[0] = &restroom;										//Location 1
+	hideouts[1] = &cafeteria;										//Location 2
+	hideouts[2] = &classC;											//Location 3
+	hideouts[3] = &printer;											//Location 4
 	
 	//Makes Jani hide in different rooms on each play-through
-	goalRoom = hideouts[hideJani(3)];								//Sets the goalRoom to one of the rooms Jani is hiding in
+	goalRoom = hideouts[hideJani(4)];								//Sets the goalRoom to one of the rooms Jani is hiding in
 	debug("roomInfo()...", debugConstant);
 	roomInfo(*room);												//Prints startRoom
 	
@@ -309,7 +314,7 @@ void roomInfo(Location info){
 	int i = 0;
 	system("cls");
 	printf("Current Room: %s\n\n", info.name);
-	printf("%s\n", info.description);
+	printf("%s\n\n", info.description);
 	for (i = 0; i < info.numOptions; i++){
 		printf("%d: %s\n", i+1, info.options[i]);
 	}
@@ -326,6 +331,6 @@ int hideJani(int numberOfHideouts){
 
 //Debug function. Uncomment the lines within to enable
 void debug(char* msg, int value){
-	//printf("DEBUG: %s: %d\n", msg, value);
-	//sleep(1);
+	printf("DEBUG: %s: %d\n", msg, value);
+	sleep(1);
 }
